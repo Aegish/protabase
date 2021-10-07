@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Planning</title>
+        <link rel="stylesheet" href="css/base.css">
+        <link href='fullcalendar/main.css' rel='stylesheet' />
+        <script src='fullcalendar/main.js'></script>
+        <script>
+        // Lib : https://fullcalendar.io
+            document.addEventListener('DOMContentLoaded', function() {
+              var calendarEl = document.getElementById('calendar');
+            
+              var calendar = new FullCalendar.Calendar(calendarEl, {
+            //Gestion de l'apparence + paramètre généraux du calendrier
+            initialView: 'dayGridMonth',
+            locale:'fr',
+            height: '90%',
+            firstDay:1,
+            selectable:true,
+            editable: true,
+            eventStartEditable:true,
+            eventResizableFromStart:true,
+            //Nb de pixel l'utilisateur doit drag pour créer un event
+            eventDragMinDistance:5,
+            initialDate: '2021-06-07',              
+            //Definition des propritétés + emplacements des boutons 
+            headerToolbar: {
+              right: 'prev,next,today addEventButton',
+              center: 'title',
+              left: 'dayGridMonth,timeGridWeek,timeGridDay',
+            },
+            customButtons: {
+              addEventButton: {
+                text: 'Ajouter votre événement !',
+                  click: function() {
+                    var dateStr = prompt('Entrez une date dans le format AAAA-MM-JJ');
+                    var nomev = prompt("Entrez le nom de l'événement.");
+                    var date = new Date(dateStr + 'T00:00:00'); // will be in local time
+                  
+                    if (!isNaN(date.valueOf())) { // valid?
+                      calendar.addEvent({
+                        title: nomev,
+                        start: date,
+                        allDay: true
+                      });
+                      alert("Malheuresement le système de sauvegarde n'est pas au point");
+                    } else {
+                      alert('Date invalide.');
+                    }
+                  }
+                }
+              },
+            /*//Permet d'alerter la date séléctionné 
+            dateClick: function(info) 
+              {
+                alert('Date: ' + info.dateStr);
+                alert('Resource ID: ' + info.resource.id);
+              },*/
+            events: [
+              {
+                title: 'Event de journée complète',
+                start: '2021-06-01'
+              },
+              {
+                title: 'Evenement de 3 jours',
+                start: '2021-06-07',
+                end: '2021-06-10'
+              },
+              {
+                groupId: '999',
+                title: 'Evenement répété',
+                start: '2021-06-09T16:00:00'
+              },
+              {
+                groupId: '999',
+                title: 'Evenement répété',
+                start: '2021-06-16T16:00:00'
+              },
+              {
+                title: 'Conference',
+                start: '2021-06-11',
+                end: '2021-06-13'
+              },
+              {
+                title: 'Reunion',
+                start: '2021-06-12T10:30:00',
+                end: '2021-06-12T12:30:00'
+              },
+              {
+                title: 'Birthday Party',
+                start: '2021-06-13T07:00:00'
+              },
+              {
+                title: 'Click pour aller sur google',
+                url: 'http://google.com/',
+                start: '2021-06-28'
+              }
+            ]
+            });
+            
+        
+            calendar.render();
+            });     
+             
+        </script>
+
+</head>
+<body>
+    <background class="bgimg2"></background>
+    <div class="container"></div>
+        <nav>
+            <ul class="first">            
+                <li style="float:left"> <a id="nav_home" href="/home">Acceuil</a></li>
+                <li><a id="nav_visio" href="/room">Viso/Meeting</a></li>
+                <li><a id="nav_factory" href="/factory">Factory</a></li>
+                <li><a id="nav_planning" href="/planning">Planning</a></li>
+                <li><a id="nav_tutoriels" href="/animation">Tutoriels</a></li>
+                <li><a id="nav_i_formateur" href="/profil-formateur">Mon profil</a></li>
+                <li><a id="nav_co" href="/">Se déconnecter</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div id='calendar' class="contenu"></div>
+</body>
+</html>

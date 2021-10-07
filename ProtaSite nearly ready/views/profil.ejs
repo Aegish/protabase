@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon site - Acceuil</title>
+    <link rel="stylesheet" href="css/base.css">
+
+  </head>
+  <body class="bgimg2">
+      <nav>
+          <ul class="first">            
+              <li style="float:left"> <a id="nav_home" href="/connecter">Acceuil</a></li>
+              <li><a id="nav_visio" href="/room">Viso/Meeting</a></li>
+                <li><a id="nav_tutoriels" href="/tuto">Tutoriels</a></li>
+              <li><a id="nav_i_formateur" href="/profil">Mon profil</a></li>
+              <li><a id="nav_co" href="/">Se déconnecter</a></li>
+          </ul>
+      </nav>
+
+        <div id = "inscription" class="formcontainer">
+            <div class="main-block">
+              <form action="/profil" method="POST">
+                <h1>Modifier mon compte</h1>
+                <fieldset>
+                  <legend>
+                    <h3>Détails du compte</h3>
+                  </legend>
+                                   <div  class="personal-details">
+                    <div>
+                      <div><label>Nom</label><input type="text" name="nom" placeholder="Votre nom" required></div>
+                      <div><label>Prénom</label><input type="text" name="prenom" placeholder="Votre prenom" required></div>
+                      <div><label>Téléphone</label><input type="text" name="phone" value="" placeholder="Votre numéro de téléphone" required></div
+                      </div>
+                    </div>
+                  </div>
+          
+                </fieldset>
+                <button type="submit" value="post">Enregistrer</button>
+              </form>
+              </div>
+   </body>
+</html>
+
+       
+
+

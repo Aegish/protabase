@@ -1,0 +1,107 @@
+body {
+    display: flex;
+    justify-content: center;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 15px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    margin : 0;
+    background-image: url(https://htmlcolorcodes.com/assets/images/html-color-codes-color-tutorials-hero.jpg);
+    }
+
+       #img1 {
+        padding: 150px;
+        margin: 20px;
+        float: 5px;
+        width: 850px;
+    }
+
+    button:hover {
+        opacity: 0.8;
+        }
+    
+        .formcontainer {
+        text-align: center;
+        margin: 24px 50px 12px;
+        padding: 90px;
+        }
+
+.acontainer {
+    padding: 16px 0;
+    text-align: left;
+}
+        span.psw {
+        float: right;
+        padding-top: 0;
+        padding-right: 15px;
+        }
+
+        form {
+            border: 5px solid #ccc;
+            }
+        
+            input[type=email], input[type=password] {
+            width: 100%;
+            padding: 16px 8px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid black;
+            box-sizing: border-box;
+            }
+        
+            .icon {
+            font-size: 110px;
+            display: flex;
+            justify-content: center;
+            color: #4286f4;
+            }
+        
+            button {
+            background-color: #4286f4;
+            color: white;
+            padding: 14px 0;
+            margin: 10px 0;
+            border: none;
+            cursor: grab;
+            width: 48%;
+            }
+
+            nav
+            {
+                text-align          : right;
+                position            : fixed;
+                background-color    : #333;
+                width               : 100%;
+            }
+        
+         
+        ul li /* Ce sont les bouttons de la nav */
+            {
+                display             : inline-block;
+            }
+
+
+            /* Les class */
+            
+            
+            .first li a /* Ce sont les bouttons de la nav */
+                {
+                    background-color    : none;
+                    color               : #f2f2f2;
+                    padding             : 10px 35px;
+                    cursor              : pointer;
+                    text-align          : center;
+                    text-decoration     : dotted;
+                }
+            
+            
+            .first li a:hover
+                {
+                    text-decoration     : underline;
+                } 
+            
+            
+            .first li a:active
+                {
+                    color               : #b9b9b9;
+                } 

@@ -1,0 +1,73 @@
+body {
+    justify-content: center;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 15px;
+    background-size: cover;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-image: url(https://htmlcolorcodes.com/assets/images/html-color-codes-color-tutorials-hero.jpg);
+}
+
+ul li {
+    display: inline-flex;
+ }
+
+.first li a {
+    color: #f2f2f2;
+    padding: 0 35px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: dotted;
+}
+ 
+
+h1 {
+    padding: 80px;
+}
+
+.container {
+    padding: 0.3px 0;
+    position: fixed;
+    text-align: right;
+    width: 100%;
+    background-color: #333;
+  }
+
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 30px;
+    grid-auto-rows: minmax(150px, auto);
+}
+
+.box {
+    background-color: #FF853D;
+    color: black;
+    font-size: large;
+    border: 2px solid black;
+    text-align: center;
+    padding: 60px;
+    cursor: pointer;
+    margin-block: 10px;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+header {
+    grid-area: header;
+    padding: 30px;
+    text-align: center;
+    font-size: 35px;
+}
+
+.affichage {
+    background-color: darkred;
+    color: white;
+    border: 2px solid red;
+}
+
+
+*:before, *:after {
+    box-sizing: inherit;
+}

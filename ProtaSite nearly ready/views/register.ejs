@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<title>Inscription</title>
+	<script src="script2.js">
+	</script>
+	<link rel="stylesheet" href="css/base.css">
+</head>
+
+
+<body>
+	<background class="bgimg2"></background>
+	<nav>
+		<ul class="first">
+			<li style="float:left"> <a id="nav_home" href="/">Acceuil</a></li>
+			<li><a id ="nav_i" href="/register">Inscription</a></li>
+			<li><a id ="nav_co" href="/log_in">Connexion</a></li>
+		</ul>
+	</nav>
+	</div>
+	<div id="form_inscription">
+		<div class="main-block">
+			<form action="/register" id="form" method="post" name="form">
+				<fieldset>
+					<legend></legend>
+					<h3><legend>Détails du compte</legend></h3>
+					<div class="account-details">
+						<div>
+							<label>Pseudo</label><input id="pseudo" name="pseudo" placeholder="Votre pseudo" required="" type="text"><small></small>
+						</div>
+						<div>
+							<label>Email</label><input id="email" name="Email" placeholder="Votre email" required="" type="email"><small></small>
+						</div>
+						<div>
+							<label>Confirmer adresse mail</label><input id="email2" name="Email2" placeholder="Répéter votre adresse mail" required="" type="email">
+						</div>
+						<div>
+							<label>Mot de passe</label><input id="password" name="Psw" placeholder="Votre mot de passe" required="" type="password"><small></small>
+						</div>
+						<div>
+							<label>Confirmer mot de passe</label><input id="password2" name="Psw2" placeholder="Répéter votre mot de passe" required="" type="password">
+						</div><label>Type de compte</label> <select name="accountType">
+							<option>
+								Client
+							</option>
+							<option>
+								Docteur
+							</option>
+							<option>
+								Administrateur
+							</option>
+						</select>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend></legend>
+					<h3><legend>Détails personnels*</legend></h3>
+					<div class="personal-details">
+						<div>
+							<div>
+								<label>Nom</label><input id="nom" name="nom" placeholder="Votre nom" required="" type="text"><small></small>
+							</div>
+							<div>
+								<label>Prénom</label><input id="prenom" name="prenom" placeholder="Votre prenom" required="" type="text"><small></small>
+							</div>
+							<div>
+								<label>URL Image</label><input id="IdImg" name="IdImg" placeholder="L'url d'une image" required="" type="text"><small></small>
+							</div>
+						</div>
+						<div>
+							<label>Genre</label>
+							<div class="Genre">
+								<input id="male" name="gender" type="radio" value="none"> <label class="radio" for="male">Homme</label> <input id="female" name="gender" type="radio" value="none"> <label class="radio" for="female">Femme</label>
+							</div><br>
+						</div>
+						<div class="birthdate">
+							<label>Date de naissance</label>
+							<div class="bdate-block">
+								<input max="2003" min="1921" name="name" placeholder="année" required="" type="date">
+							</div>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset>
+					<legend></legend>
+					<h3><legend>Termes d'envoi</legend></h3>
+					<div class="terms-mailing">
+						<div class="checkbox">
+							<input name="checkbox" type="checkbox"><span>J'accepte <a href="https://www.w3docs.com/privacy-policy">la politique privée pour W3Docs.</a></span>
+						</div>
+					</div>
+				</fieldset><input type="submit" value="Enregistrer">
+			</form>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,272 @@
+/* Element reconnu */
+
+
+*
+    {
+        z-index             : 25;
+    }
+
+
+html,body
+    {
+        height              : 100%;
+    }
+
+
+body 
+    {
+        display             : block;
+        justify-content     : center;
+        font-family         : Roboto, Arial, sans-serif;
+        font-size           : 15px;
+        margin              : 0;
+
+    }
+
+
+nav
+    {
+        text-align          : right;
+        position            : fixed;
+        background-color    : #333;
+        width               : 100%;
+        z-index             : 50;
+    }
+
+ 
+ul li /* Ce sont les bouttons de la nav */
+    {
+        display             : inline-block;
+    }
+
+    
+/* Formulaire de connexion */
+
+
+input[type=file]
+    {
+        width               :8%;
+        background-color    : #A9A9A9;
+        color               : black;
+        padding             : 8px 10px;
+        border              : none;
+        cursor              : pointer;
+        border-radius       : 5px;
+        border              : 1px solid black;        
+    }
+
+
+/*Pour tous les formulaires*/
+
+
+form
+    {
+       
+        background-color    : #333;
+        padding             : 20px;
+        margin              : 5%;
+        border-radius       : 20px;
+    }
+
+
+input, input[type=submit], select
+    {
+        width               : 100%;
+        padding             : 16px 8px;
+        margin              : 8px 0;
+        display             : inline-block;
+        border              : 1px solid black;
+        box-sizing          : border-box;
+        border-radius       : 5px;
+        background-color    : #DCDCDC;
+    }
+
+
+    
+::placeholder
+    {
+        color               : black;
+    }
+
+
+label, h3, h1
+    {
+        text-decoration     : underline;
+        color               : #DCDCDC;
+    }    
+
+
+input[type=submit]:hover 
+    {
+        background-color    :   #45a049;
+    }  
+    
+    
+/* Les Element non reconnu ( Element personnalisé )*/
+
+
+ElementpersoExemple
+    {
+        z-index             : 25;
+    }
+
+/* Les ID */
+
+
+/*Formulaire administratif - responsable de formation */
+#formadmin
+    {
+       
+        position            : absolute;
+        top                 : 8%;
+        width               : 100%; 
+        
+    }
+#f1 
+    {
+        width               : 24%;
+        border              : 1px solid black;
+        margin              : 2px;
+        padding             : 0px 5px;
+        padding-bottom      : 154px;
+        background          : #333;
+        display             : row;
+        float               : left;
+    }
+#f2 
+    {
+        width               : 24%;
+        border              : 1px solid black;
+        margin              : 2px;
+        padding             : 0px 5px;
+        padding-bottom      : 70px;
+        background          : #333;
+        display             : row;
+        float               : left;
+    }    
+#f3, #f4
+    {
+        width               : 24%;
+        border              : 1px solid black;
+        margin              : 2px;
+        padding             : 0px 5px;
+        padding-bottom      : 477px;
+        background          : #333;
+        display             : row;
+        float               : left;
+    }
+#hey1, #hey2, #hey3, #hey4 
+    {
+        display: inline-flex;
+        width: 15%;
+        border: 1px solid blue;
+        margin: 5%;
+        padding: 4%;
+        background: #c3041b;
+        text-align: center;
+
+    }
+    
+/* Formulaire de connexion */
+#formconnexion
+    {
+        position            : absolute;
+        top                 : 25%;
+        left                : 25%;
+        width               : 50%;
+        
+    }
+
+/* Formulaire d'inscripition */
+#form_inscription 
+    {
+       
+        position            : absolute;
+        top                 : 8%;
+        left                : 40%;
+        width               : 455px; 
+        
+    }
+
+
+/* Les class */
+
+
+.first li a /* Ce sont les bouttons de la nav */
+    {
+        background-color    : none;
+        color               : #f2f2f2;
+        padding             : 10px 35px;
+        cursor              : pointer;
+        text-align          : center;
+        text-decoration     : dotted;
+    }
+
+
+.first li a:hover
+    {
+        text-decoration     : underline;
+    } 
+
+
+.first li a:active
+    {
+        color               : #b9b9b9;
+    } 
+
+
+.wrapper 
+    {
+        display             : grid;
+        grid-template-columns: repeat(5, 5fr);
+        grid-gap            : 30px;
+        grid-auto-rows      : minmax(50px, auto);
+     }
+    
+    
+.box 
+    {
+        background-color: #DC143C;
+        color: white;
+        border: 2px solid red;
+        padding: 60px;
+     }
+
+
+.bgimg1
+    {
+        background-image    : url("https://cdn.discordapp.com/attachments/846805487743533126/860935296514523136/screen_1.jpg");
+        background-color    : #424242;
+        height              : 100vh;
+        width               : 100%;
+        background-position : center;
+        background-repeat   : no-repeat;
+        background-size     : cover;
+    }
+
+
+.bgimg2
+    {
+        background-image    : url("https://media.discordapp.net/attachments/846805487743533126/860998406151340062/FOND.jpg");
+        background-color    : #424242;
+        width               : 100%;
+        height              : 100%;
+        background-position : center;
+        background-repeat   : no-repeat;
+        background-size     : cover;
+        position            : fixed;
+    }
+
+.formation {
+    display: row;
+
+}
+
+.formation-contenu {
+    margin : 190px;
+}
+
+input, input[type=button] {
+    padding: 13px;
+    margin: 10px;
+}
