@@ -102,55 +102,49 @@ app.get('/log_in', (req, res) => {
 app.post('/log_in', urlencodedParser, (req, res) => {
     var Identifiant = req.body.Identifiant;
     var password = req.body.Psw;
-    var accountType = req.body.accountType;
 
     if (Identifiant && password) {
 
             //   SELECT idCompte FROM compte WHERE (pseudo = ? OR pseudo = ?) AND mdp=? AND compteType='?';
 
-       mysqlConnexion.query("SELECT idCompte FROM compte WHERE (pseudo = ? OR email = ?) AND mdp=? AND compteType='?';", [Identifiant,Identifiant,password,accountType], function (error, results, fields) {
+       mysqlConnexion.query("SELECT idCompte FROM compte WHERE (pseudo = ? OR email = ?) AND mdp=? AND compteType='Client';", [Identifiant,Identifiant,password], function (error, results, fields) {
            if(error) throw error;
             if (results.length > 0) {
                 req.session.loggedin = true;
-                req.session.email = Email;
+                req.session.email = Identifiant;
                 res.redirect('/connecter');
-                mysqlConnexion.query("SELECT* from account WHERE accountMail1 = '" + Email + "';", (err, rows) => {
-                    variablelocal = rows[0].idaccount
-                    console.log(' info perso : ', variablelocal);
-                    return variablelocal;
-                 });
+                variablelocal = results[0].idCompte;
+                console.log(' info perso : ', variablelocal);
+                return variablelocal;
                 
 
             }
 
             else {
-                mysqlConnexion.query("SELECT idCompte FROM compte WHERE (pseudo = ? OR email = ?) AND mdp=? AND compteType='?';", [Identifiant,Identifiant,password,accountType], function (error, results, fields) {
+                mysqlConnexion.query("SELECT idCompte FROM compte WHERE (pseudo = ? OR email = ?) AND mdp=? AND compteType='Docteur';", [Identifiant,Identifiant,password], function (error, results, fields) {
                     if(error) throw error;
                      if (results.length > 0) {
                         req.session.loggedin = true;
-                        req.session.email = Email;
+                        req.session.email = Identifiant;
                         res.redirect('/connecter-formateur');
-                        mysqlConnexion.query("SELECT* from account WHERE accountMail1 = '" + Email + "';", (err, rows) => {
-                            variablelocal = rows[0].idaccount
-                            console.log(' info perso : ', variablelocal);
-                            return variablelocal;
-                        });
+                        variablelocal = results[0].idCompte;
+                        console.log(' info perso : ', variablelocal);
+                        return variablelocal;
                     }
                     else {
-                        mysqlConnexion.query("SELECT idCompte FROM compte WHERE (pseudo = ? OR email = ?) AND mdp=? AND compteType='?';", [Identifiant,Identifiant,password,accountType], function (error, results, fields) {
+                        mysqlConnexion.query("SELECT idCompte FROM compte WHERE (pseudo = ? OR email = ?) AND mdp=? AND compteType='Admin';", [Identifiant,Identifiant,password], function (error, results, fields) {
                             if(error) throw error;
                              if (results.length > 0) {
                                 req.session.loggedin = true;
-                                req.session.email = Email;
+                                req.session.email = Identifiant;
                                 res.redirect('/connecter-responsable');
-                                mysqlConnexion.query("SELECT* from account WHERE accountMail1 = '" + Email + "';", (err, rows) => {
-                                    variablelocal = rows[0].idaccount
-                                    console.log(' info perso : ', variablelocal);
-                                    return variablelocal;
-                                });
+                                variablelocal = results[0].idCompte;
+                                console.log(' info perso : ', variablelocal);
+                                return variablelocal;
                             }
                             else {
-                                res.send("Le mot de passe ou l'adresse mail est incorrect!");
+                                res.send("Le mot de passe ou l'identifiant est incorrect!");
+                                console.log(Identifiant,password);
 
                             }
                         });
@@ -374,7 +368,6 @@ app.post('/profil', urlencodedParser, [
     var password = req.body.Psw;
     var prenom = req.body.prenom;
     var nom = req.body.nom;
-    var phone = req.body.phone;
 
     // table account 
     var sql2 = 'UPDATE account set accountName = ?, accountPhone = ? where idaccount = ?';
