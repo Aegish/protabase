@@ -100,16 +100,16 @@ app.get('/log_in', (req, res) => {
 
 //-> requete pour pouvoir se connecter
 app.post('/log_in', urlencodedParser, (req, res) => {
-    var Email = req.body.Email;
-    var pseudo = req.body.pseudo;
+    var Identifiant = req.body.Identifiant;
     var password = req.body.Psw;
     var accountType = req.body.accountType;
 
-    if (Email && password) {
+    if (Identifiant && password) {
 
-            //   SELECT idCompte FROM compte WHERE (pseudo = ? OR pseudo = ?) AND $passe = compte.mdp AND $monTypeDeCompte = compte.compteType; en cour de modification
+            //   SELECT idCompte FROM compte WHERE (pseudo = ? OR pseudo = ?) AND mdp=? AND compteType='?';
 
-       mysqlConnexion.query("SELECT idCompte FROM compte INNER JOIN account on usersMail = accountMail1 where accountType = 'Apprenant' and usersMail = ? and usersPwd = ?", [Email, password], function (error, results, fields) {
+       mysqlConnexion.query("SELECT idCompte FROM compte WHERE (pseudo = ? OR email = ?) AND mdp=? AND compteType='?';", [Identifiant,Identifiant,password,accountType], function (error, results, fields) {
+           if(error) throw error;
             if (results.length > 0) {
                 req.session.loggedin = true;
                 req.session.email = Email;
@@ -124,8 +124,9 @@ app.post('/log_in', urlencodedParser, (req, res) => {
             }
 
             else {
-                mysqlConnexion.query("SELECT* FROM users INNER JOIN account on usersMail = accountMail1 where accountType = 'Formateur' and usersMail = ? and usersPwd = ?", [Email, password], function (error, results, fields) {
-                    if (results.length > 0) {
+                mysqlConnexion.query("SELECT idCompte FROM compte WHERE (pseudo = ? OR email = ?) AND mdp=? AND compteType='?';", [Identifiant,Identifiant,password,accountType], function (error, results, fields) {
+                    if(error) throw error;
+                     if (results.length > 0) {
                         req.session.loggedin = true;
                         req.session.email = Email;
                         res.redirect('/connecter-formateur');
@@ -136,8 +137,9 @@ app.post('/log_in', urlencodedParser, (req, res) => {
                         });
                     }
                     else {
-                        mysqlConnexion.query("SELECT* FROM users INNER JOIN account on usersMail = accountMail1 where accountType = 'Responsable formation' and usersMail = ? and usersPwd = ?", [Email, password], function (error, results, fields) {
-                            if (results.length > 0) {
+                        mysqlConnexion.query("SELECT idCompte FROM compte WHERE (pseudo = ? OR email = ?) AND mdp=? AND compteType='?';", [Identifiant,Identifiant,password,accountType], function (error, results, fields) {
+                            if(error) throw error;
+                             if (results.length > 0) {
                                 req.session.loggedin = true;
                                 req.session.email = Email;
                                 res.redirect('/connecter-responsable');
