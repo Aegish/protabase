@@ -101,13 +101,15 @@ app.get('/log_in', (req, res) => {
 //-> requete pour pouvoir se connecter
 app.post('/log_in', urlencodedParser, (req, res) => {
     var Email = req.body.Email;
+    var pseudo = req.body.pseudo;
     var password = req.body.Psw;
     var accountType = req.body.accountType;
 
     if (Email && password) {
 
+            //   SELECT idCompte FROM compte WHERE (pseudo = ? OR pseudo = ?) AND $passe = compte.mdp AND $monTypeDeCompte = compte.compteType; en cour de modification
 
-       mysqlConnexion.query("SELECT* FROM users INNER JOIN account on usersMail = accountMail1 where accountType = 'Apprenant' and usersMail = ? and usersPwd = ?", [Email, password], function (error, results, fields) {
+       mysqlConnexion.query("SELECT idCompte FROM compte INNER JOIN account on usersMail = accountMail1 where accountType = 'Apprenant' and usersMail = ? and usersPwd = ?", [Email, password], function (error, results, fields) {
             if (results.length > 0) {
                 req.session.loggedin = true;
                 req.session.email = Email;
@@ -341,9 +343,9 @@ app.post('/register', urlencodedParser, [
         console.log('Les données ont été envoyé à la base de donnée !')
         console.log(rows)
         //table users
-        mysqlConnexion.query("SELECT idcompte FROM compte WHERE email = '"+req.body.Email+"';",(err,renvoi)=>{/*req.body.Email a été remplacé par : req.body.Adresse & req.body.Psw a été remplacé par : req.body.IdImg */
+        mysqlConnexion.query("SELECT idCompte FROM compte WHERE email = '"+req.body.Email+"';",(err,renvoi)=>{/*req.body.Email a été remplacé par : req.body.Adresse & req.body.Psw a été remplacé par : req.body.IdImg */
             if (err) throw err;
-            var sql1 = "INSERT INTO utilisateur (idcompte,prenom,nom,idImg) VALUES ('"+renvoi[0].idcompte+"','" + req.body.prenom + "', '" + req.body.nom + "', '" + req.body.IdImg + "')";
+            var sql1 = "INSERT INTO utilisateur (idCompte,prenom,nom,idImg) VALUES ('"+renvoi[0].idCompte+"','" + req.body.prenom + "', '" + req.body.nom + "', '" + req.body.IdImg + "')";
             mysqlConnexion.query(sql1, function (err, rows, fields) {
                 if (err) throw err
                 res.render('inscription_succes', { title: 'Donnée sauvegarder', message: 'Sauvegardé avec succès.' })
