@@ -174,7 +174,7 @@ app.get('/inscription_succes', (req, res) => {
     res.render('inscription_succes')
 })
 
-//-> page de redirection après connexion
+//-> page de redirection après connexion quand c'est un client
 app.get('/connecter', function (request, response) {
     if (request.session.loggedin) {
         response.render('connecter');
@@ -185,21 +185,22 @@ app.get('/connecter', function (request, response) {
     response.end();
 });
 
-//-> page de redirection après connexion quand c'est un formateur
+//-> page de redirection après connexion quand c'est un Docteur.
 app.get('/connecter-formateur', function (request, response) {
     if (request.session.loggedin) {
-
-        response.render('connecter-formateur');
+        if (mysqlConnexion.query("SELECT * FROM compte WHERE compte.compteType = 'Docteur'")){
+            response.render('connecter-formateur');
+        }
     } else {
         response.send('Connectez-vous pour voir cette page !');
     }
     response.end();
 });
 
-//-> page de redirection après connexion quand c'est un responsable
+//-> page de redirection après connexion quand c'est un Administrateur
 app.get('/connecter-responsable', function (request, response) {
     if (request.session.loggedin) {
-        if (mysqlConnexion.query("SELECT * FROM account WHERE accountType = 'Responsable formation'")) {
+        if (mysqlConnexion.query("SELECT * FROM compte WHERE compte.compteType = 'Admin'")) {
 
             response.render('connecter-responsable');
         }
