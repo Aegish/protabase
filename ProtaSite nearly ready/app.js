@@ -126,7 +126,7 @@ app.post('/log_in', urlencodedParser, (req, res) => {
                      if (results.length > 0) {
                         req.session.loggedin = true;
                         req.session.email = Identifiant;
-                        res.redirect('/connecter-formateur');
+                        res.redirect('/connecter-docteur');
                         variablelocal = results[0].idCompte;
                         console.log(' info perso : ', variablelocal);
                         return variablelocal;
@@ -137,7 +137,7 @@ app.post('/log_in', urlencodedParser, (req, res) => {
                              if (results.length > 0) {
                                 req.session.loggedin = true;
                                 req.session.email = Identifiant;
-                                res.redirect('/connecter-responsable');
+                                res.redirect('/connecter-admin');
                                 variablelocal = results[0].idCompte;
                                 console.log(' info perso : ', variablelocal);
                                 return variablelocal;
@@ -186,10 +186,10 @@ app.get('/connecter', function (request, response) {
 });
 
 //-> page de redirection après connexion quand c'est un Docteur.
-app.get('/connecter-formateur', function (request, response) {
+app.get('/connecter-docteur', function (request, response) {
     if (request.session.loggedin) {
         if (mysqlConnexion.query("SELECT * FROM compte WHERE compte.compteType = 'Docteur'")){
-            response.render('connecter-formateur');
+            response.render('connecter-docteur');
         }
     } else {
         response.send('Connectez-vous pour voir cette page !');
@@ -198,11 +198,11 @@ app.get('/connecter-formateur', function (request, response) {
 });
 
 //-> page de redirection après connexion quand c'est un Administrateur
-app.get('/connecter-responsable', function (request, response) {
+app.get('/connecter-admin', function (request, response) {
     if (request.session.loggedin) {
         if (mysqlConnexion.query("SELECT * FROM compte WHERE compte.compteType = 'Admin'")) {
 
-            response.render('connecter-responsable');
+            response.render('connecter-admin');
         }
     } else {
         response.send('Connectez-vous pour voir cette page !');
@@ -216,19 +216,19 @@ app.get('/formulaire-admin', (req, res) => {
     res.render('formulaire-admin')
 })
 
-//-> page redirection après connexion poru le responsable formation
-app.get('/connecter-responsable', (req, res) => {
-    res.render('connecter-responsable')
+//-> page redirection après connexion poru le admin formation
+app.get('/connecter-admin', (req, res) => {
+    res.render('connecter-admin')
 })
 
-//-> page pour que le formateur gère ses formations animation ect..
-app.get('/formateur-gestion', (req, res) => {
-    res.render('formateur-gestion')
+//-> page pour que le docteur gère ses formations animation ect..
+app.get('/docteur-gestion', (req, res) => {
+    res.render('docteur-gestion')
 })
 
-//-> page pour que le responsable gère les formations animation ect..
-app.get('/responsable-gestion', (req, res) => {
-    res.render('responsable-gestion')
+//-> page pour que le admin gère les formations animation ect..
+app.get('/admin-gestion', (req, res) => {
+    res.render('admin-gestion')
 })
 
 // -> page profil, ici se trouve les infos perso'
@@ -238,12 +238,12 @@ app.get('/profil', (req, res) => {
 // --> Naviguer entre page EJS <-- //
 
     
-app.get('/profil-formateur', (req, res) => {
-    res.render('profil-formateur')
+app.get('/profil-docteur', (req, res) => {
+    res.render('profil-docteur')
 })
 
-app.get('/profil-responsable', (req, res) => {
-    res.render('profil-responsable')
+app.get('/profil-admin', (req, res) => {
+    res.render('profil-admin')
 })
 
 //-> page de redirection pour animer une formation
@@ -392,7 +392,7 @@ app.post('/profil', urlencodedParser, [
  });
 
 
-app.post('/profil-formateur', urlencodedParser, [
+app.post('/profil-docteur', urlencodedParser, [
     check('nom', ' /!\ Le nom doit contenir plus de 3 charactères !/!\ ')
         .exists()
         .isLength({ min: 3 }),
@@ -404,7 +404,7 @@ app.post('/profil-formateur', urlencodedParser, [
         // return res.status(422).jsonp(errors.array())
         const alert = errors.array()
 
-        res.render('profil-formateur', {
+        res.render('profil-docteur', {
             alert
         })
     }
@@ -461,16 +461,16 @@ app.post('/formulaire-admin', urlencodedParser, (req, res) => {
     mysqlConnexion.query(sql6, function (err, rows, fields) {
         if (err) throw err
         alert = 'Inscription à la formation terminé';
-        res.redirect('/responsable-gestion');
+        res.redirect('/admin-gestion');
         console.log('Les données ont été envoyé à la base de donnée !');
         console.log(rows);
 
 
 
         // table account_has_trainings
-        // -- requête pour inscrire un apprenant/formateur/responsable à une formation --
+        // -- requête pour inscrire un apprenant/docteur/admin à une formation --
 
-        //insérer dans la table account_has_trainings l'id du formateur et celui des apprenants
+        //insérer dans la table account_has_trainings l'id du docteur et celui des apprenants
 
         // mysqlConnexion.query("insert into account_has_trainings (account_idaccount, trainings_idTrainings) SELECT idaccount from account left join trainings on trainings_idTrainings = idTrainings", function (err, rows, fields) {
 
