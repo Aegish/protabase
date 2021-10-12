@@ -370,9 +370,9 @@ app.post('/profil', urlencodedParser, [
     var nom = req.body.nom;
 
     // table account 
-    var sql2 = 'UPDATE account set accountName = ?, accountPhone = ? where idaccount = ?';
+    var sql2 = 'UPDATE utilisateur set nom = ?, accountPhone = ? where idCompte = ?';
 
-    mysqlConnexion.query(sql2, [prenom, phone], function (err, rows, fields) {
+    mysqlConnexion.query(sql2, [prenom, phone,variablelocal], function (err, rows, fields) {
         if (err) throw err
        // res.send('UPDATE terminé, vous pouvez désormais vous connecter !')
         console.log('Les données ont été envoyé à la base de donnée !')
@@ -489,6 +489,16 @@ app.post('/formulaire-admin', urlencodedParser, (req, res) => {
 
     })
 
+})
+
+
+//-> 
+app.post('/scanner', urlencodedParser, (req, res) => {
+    var scanURL = req.body.scanURL;
+    var sqlSCAN = "SELECT * FROM utilisateur,drug WHERE utilisateur.codeBarre = '"+ scanURL +"' OR drugValue = '"+ scanURL +"';";
+    mysqlConnexion.query(/*TODO*/sqlSCAN,(err, rows) => {
+        if(err) throw err;
+    });
 })
 
 
