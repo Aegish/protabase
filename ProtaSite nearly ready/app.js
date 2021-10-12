@@ -221,16 +221,6 @@ app.get('/connecter-admin', (req, res) => {
     res.render('connecter-admin')
 })
 
-//-> page pour que le docteur gère ses formations animation ect..
-app.get('/docteur-gestion', (req, res) => {
-    res.render('docteur-gestion')
-})
-
-//-> page pour que le admin gère les formations animation ect..
-app.get('/admin-gestion', (req, res) => {
-    res.render('admin-gestion')
-})
-
 // -> page profil, ici se trouve les infos perso'
 app.get('/profil', (req, res) => {
     res.render('profil')
@@ -246,47 +236,14 @@ app.get('/profil-admin', (req, res) => {
     res.render('profil-admin')
 })
 
-//-> page de redirection pour animer une formation
-app.get('/animation', (req, res) => {
-    res.render('animation')
-})
-
 //-> page de redirection vers le planning
 app.get('/planning', (req, res) => {
     res.render('planning')
 })
 
-//-> page de redirection pour concevoir/gérer un contenue pédagogique
-app.get('/factory', (req, res) => {
-    res.render('factory')
-})
-
-//-> page de redirection vers visio
-app.get('/visio', (req, res) => {
-    res.render('visio')
-})
-
-//-> page de redirection pour concevoir ou modifier une formation
-app.get('/make', (req, res) => {
-    res.render('make')
-})
-
-/*-> page de redirection vers le formulaire de créaton d'une formation
-app.get('/make-formulaire', (req, res) => {
-    res.render('make-formulaire')
-})*/
-
-
-// Gestion de la Visio par Joel
-app.get('/:room', (req, res) => 
-{
-    res.render('room', { roomId: req.params.room })
-})
-
-// id of the room in the url
-app.get('/room', (req, res) => 
-{
-    res.redirect(`/${uuidV4()}`)
+//-> page de redirection vers la page du scanneur
+app.get('/scanner', (req, res) => {
+    res.render('scanner')
 })
 
 // user connceted or disconnected when he joins / leaves the room
@@ -496,331 +453,35 @@ app.post('/formulaire-admin', urlencodedParser, (req, res) => {
 //-> 
 app.post('/scanner', urlencodedParser, (req, res) => {
     var scanURL = req.body.scanURL;
-    var sqlSCAN = "SELECT * FROM utilisateur,drug WHERE utilisateur.codeBarre = '"+ scanURL +"' OR drugValue = '"+ scanURL +"';";
-    mysqlConnexion.query(/*TODO*/sqlSCAN,(err, rows) => {
-        if(err) throw err;
-    });
+    if(scanURL)
+        {            
+            var sqlCommand0 = "SELECT * FROM utilisateur WHERE utilisateur.codeBarre = '"+ scanURL +"';";
+            var sqlCommand1 = "SELECT * FROM drug WHERE drug.drugValue = '"+scanURL +"';";
+            mysqlConnexion.query(sqlCommand0,(err, results) => {
+                if(err) throw err;
+                if (results.length > 0) 
+                    {
+                        console.log(results);
+                    }
+                else 
+                    {
+                        mysqlConnexion.query(sqlCommand1,(err, results) => {
+                            if(err) throw err;
+                            if (results.length > 0) 
+                                {
+                                    console.log(results);
+                                }
+                            else
+                                {
+                                    console.log("erreur");
+                                }                   
+                        });
+                    }
+            });
+            console.log("Recherche code barre tenté");
+        }
 })
 
-
-// Les fonctions sont içi
-// Action journalière
-function boucle()
-    {
-        mysqlConnexion.query('SELECT * FROM trainings order by idTrainings', (err, rows) => {
-            const Maintenant = new Date();
-            const Demain = new Date(Date.now() + 86400000);
-            const Semainefutur = new Date(Date.now() + 604800000);
-            const DeuxSemainesfutur = new Date(Date.now() + 1209600000);
-            //rows.length = nombre de formation trouvé
-            NbmaxTrainings = rows.length;
-            NomFormation = 'bla';
-            if (err) throw err;
-            console.log('Data reçu 5/5 le : ', Maintenant.toUTCString(), '\n Nombre de formation trouvé : ', NbmaxTrainings);
-            //Une boucle permettant de regarder tous les entrainements 1 par 1
-            for (let Nbtrainings = 0; Nbtrainings < NbmaxTrainings; Nbtrainings++)
-                {
-                    TrainingsID = rows[Nbtrainings].idTrainings;                   
-                    mysqlConnexion.query('SELECT TrainingsName FROM trainings where idTrainings =' + TrainingsID+' order by idTrainings', (err, TrainingsNom) => {
-                        if (err) throw err;
-                    NomFormation = TrainingsNom;
-                    
-                    mysqlConnexion.query('SELECT accountMail1 FROM account where idaccount IN(SELECT account_idaccount FROM account_has_trainings where trainings_idTrainings =' + TrainingsID + ' ) order by idaccount;', (err, result) => {
-                        if (err) throw err;
-                        // NbmaxMail = nombre max de résultat trouvé
-                        NbmaxMail = result.length;
-                    // Si l'entrainement regarder se passe dans 2 semaines alors il préviendra les concernés 
-                    if (rows[Nbtrainings].TrainingsDateDebut.toISOString().split('T')[0] == DeuxSemainesfutur.toISOString().split('T')[0])
-                            {                            
-                                console.log("Formation commence dans 2 semaines", TrainingsID);
-                                    for (let Nbprecis = 0; Nbprecis < NbmaxMail; Nbprecis++)
-                                        {
-                                            mysqlConnexion.query('SELECT firstname , lastname FROM contact_details where idaccount IN(SELECT account_idaccount FROM account_has_trainings where trainings_idTrainings =' + TrainingsID + ' ) order by idaccount;', (err, infoperso) => {
-                                                if (err) throw err;
-                                            VarPrenom = infoperso[Nbprecis].firstname;
-                                            VarNom = infoperso[Nbprecis].lastname;
-                                            console.log(NomFormation, NbmaxMail);
-                                            // Configuration de paramètres d'envoi du mail
-                                            var mailOptions = 
-                                                {
-                                                    from: 'paperbird.formation@gmail.com',
-                                                    to: result[Nbprecis].accountMail1,
-                                                    subject: 'Sending Email using Node.js',
-                                                    // Utilise un message préfait
-                                                    text: 'Bonjour '+ VarNom +' '+VarPrenom+' votre formation : ' + NomFormation[0].TrainingsName + ' commencera dans 2 semaines.' 
-                                                };
-                                            // Envoi du mail
-                                            transporter.sendMail(mailOptions, function (error, info) 
-                                                {
-                                                    if (error) 
-                                                        {
-                                                            console.log(error);
-                                                        }
-                                                    else 
-                                                        {
-                                                            console.log('Email sent to : ' + result[Nbprecis].accountMail1 + '\n response' + info.response);
-                                                        }
-                                                })});
-                                        }                     
-                            }
-
-                    // Si la formation commence dans 1 semaine alors il préviendra les concernés
-                    else if (rows[Nbtrainings].TrainingsDateDebut.toISOString().split('T')[0] == Semainefutur.toISOString().split('T')[0])
-                            {                            
-                                console.log("Formation commence dans 1 semaine", TrainingsID);
-                                for (let Nbprecis = 0; Nbprecis < NbmaxMail; Nbprecis++)
-                                    {
-                                        mysqlConnexion.query('SELECT firstname , lastname FROM contact_details where idaccount IN(SELECT account_idaccount FROM account_has_trainings where trainings_idTrainings =' + TrainingsID + ' ) order by idaccount;', (err, infoperso) => {
-                                            if (err) throw err;
-                                        VarPrenom = infoperso[Nbprecis].firstname;
-                                        VarNom = infoperso[Nbprecis].lastname;
-                                        console.log(VarPrenom,VarNom,NbmaxMail);
-                                        // Configuration de paramètres d'envoi du mail
-                                        var mailOptions = 
-                                            {
-                                                from: 'paperbird.formation@gmail.com',
-                                                to: result[Nbprecis].accountMail1,
-                                                subject: 'Sending Email using Node.js',
-                                                // Utilise un message préfait
-                                                text: 'Bonjour '+ VarNom +' '+VarPrenom+' votre formation : ' + NomFormation[0].TrainingsName + ' va commencer dans 1 semaine.' 
-                                            };
-                                        // Envoi du mail
-                                        transporter.sendMail(mailOptions, function (error, info)
-                                            {
-                                                if (error) 
-                                                    {
-                                                        console.log(error);
-                                                    }
-                                                else 
-                                                    {
-                                                        console.log('Email sent to : ' + result[Nbprecis].accountMail1 + '\n response' + info.response);
-                                                    }
-                                            })});
-                                    }                                                   
-                            }
-
-                    // Si la formation commence le lendemain alors il préviendra les concernés
-                    else if (rows[Nbtrainings].TrainingsDateDebut.toISOString().split('T')[0] == Demain.toISOString().split('T')[0]) // A modifier mais je ne sais pas quoi -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-                            {
-                                for (let Nbprecis = 0; Nbprecis < NbmaxMail; Nbprecis++)
-                                    {
-                                        mysqlConnexion.query('SELECT firstname , lastname FROM contact_details where idaccount IN(SELECT account_idaccount FROM account_has_trainings where trainings_idTrainings =' + TrainingsID + ' ) order by idaccount;', (err, infoperso) => {
-                                            if (err) throw err;
-                                        VarPrenom = infoperso[Nbprecis].firstname;
-                                        VarNom = infoperso[Nbprecis].lastname;
-                                        console.log(VarPrenom,VarNom,result[Nbprecis].accountMail1,result,NbmaxMail,Nbprecis);                                        
-                                        var mailOptions = 
-                                            {
-                                                from: 'paperbird.formation@gmail.com',
-                                                to: result[Nbprecis].accountMail1,
-                                                subject: 'Sending Email using Node.js',
-                                                // Utilise un message préfait
-                                                text: 'Bonjour '+ VarNom +' '+VarPrenom+' votre formation : ' + NomFormation[0].TrainingsName + ' commencera demain.'
-                                            };
-                                        transporter.sendMail(mailOptions, function (error, info) // Envoi du mail
-                                            {
-                                                if (error) 
-                                                    {
-                                                        console.log(error);
-                                                    }
-                                                else 
-                                                    {
-                                                        console.log('Email sent to : ' + result[Nbprecis].accountMail1 + '\n response' + info.response);
-                                                    }
-                                            })});
-                                    }
-                            }
-
-                    else {
-                        console.log(" Debut Formation brute : ", rows[Nbtrainings].TrainingsDateDebut, "\n Moment actuel brute : ", Maintenant, "\n Debut Formation arrangé : ", rows[Nbtrainings].TrainingsDateDebut.toISOString().split('T')[0], "\n Moment actuel arrangé : ", Maintenant.toISOString().split('T')[0], "\n Dans une semaine arrangé : ", Semainefutur.toISOString().split('T')[0]);
-                    }
-                    console.log("Fin du tour !" + Nbtrainings);
-                });});
-                }
-            if (true) {
-                setTimeout(() => boucle(), 86400000);// 1 jour = 86400000, 30 sec = 30000
-            }
-
-        });
-    }
-
-// Action toute les 30 sec
-function Minuterie() 
-    {
-        //Check de formation pas fini
-        mysqlConnexion.query("Select * from trainings WHERE TrainingsStatus != 'Fini';", (err, rows) =>
-            {
-                const Maintenant = new Date();
-                NbmaxTrainingstrouve = rows.length;
-                for (let NumTrainings = 0; NumTrainings < NbmaxTrainingstrouve; NumTrainings++) {
-                    IdFormation = rows[NumTrainings].idTrainings;
-                    // Si la formation est enfaite fini
-                    if (rows[NumTrainings].TrainingsDateFin.getTime() < Maintenant.getTime())
-                    {
-                        // Lui donner comme statut 'Fini'
-                        mysqlConnexion.query("UPDATE `ppbv0`.`trainings` SET `TrainingsStatus` = 'Théoriquement fini' WHERE (`idTrainings` = '" + IdFormation + "');", (err))
-                        if (err) throw err;
-                        console.log("action");
-                    }
-                }
-
-            })
-        //Check de formation pas encore commencé
-        mysqlConnexion.query("Select * from trainings WHERE TrainingsStatus = 'En Attente';", (err, rows) =>
-            {
-                const Maintenant = new Date();
-                NbmaxTrainingstrouve = rows.length;
-                for (let NumTrainings = 0; NumTrainings < NbmaxTrainingstrouve; NumTrainings++) {
-                    IdFormation = rows[NumTrainings].idTrainings;
-                    // Si la formation est censé avoir commencé 
-                    if (rows[NumTrainings].TrainingsDateDebut.getTime() > Maintenant.getTime())
-                    {
-                        // Lui donner comme statut 'En retard'
-                        mysqlConnexion.query("UPDATE `ppbv0`.`trainings` SET `TrainingsStatus` = 'En retard' WHERE (`idTrainings` = '" + IdFormation + "');", (err))
-                        if (err) throw err;
-                        console.log("action");
-                    }
-                }
-
-            })
-        setTimeout(() => Minuterie(), 30000);// 1 jour = 86400000, 30 sec = 30000    
-    }
-
-//Change l'état de la formation en 'fini' + Donne une attéstation à toutes les personnes présente à la formation 
-function TerminerFormation(IdDeLaFormation) 
-    {
-        mysqlConnexion.query('Select * from trainings where idTrainings = '+IdDeLaFormation+' ;', (err, rows) =>
-            {
-                mysqlConnexion.query("UPDATE `ppbv0`.`trainings` SET `TrainingsStatus` = 'Fini' WHERE (`idTrainings` = '" + IdDeLaFormation + "');", (err))
-                    if (err) throw err;
-                VarFormation = rows[0].TrainingsName;
-                VarDBFormation = rows[0].TrainingsDateDebut;
-                VarDFFormation = rows[0].TrainingsDateFin;
-                VarModaFormation = rows[0].TrainingsModalite;
-                mysqlConnexion.query('SELECT * FROM account where idaccount IN(SELECT account_idaccount FROM account_has_trainings where trainings_idTrainings =' + IdDeLaFormation + ' ) order by idaccount;', (err, result) => 
-                    {
-                        if (err) throw err;
-                        // NbmaxMail = nombre max de résultat trouvé
-                        NbmaxMail = result.length;
-                        mysqlConnexion.query('SELECT firstname , lastname FROM contact_details where idaccount IN(SELECT account_idaccount FROM account_has_trainings where trainings_idTrainings =' + IdDeLaFormation + ' ) order by idaccount;', (err, infoperso) => 
-                                    {
-                                        // La fonction boucle est une fonction boucle avec latence de 0.5s
-                                        Nbprecis = 0;
-                                        function Boucle()
-                                            {
-                                                setTimeout(function()
-                                                    {
-                                                        if (err) throw err;
-                                                        VarNom = infoperso[Nbprecis].lastname;
-                                                        VarPrenom = infoperso[Nbprecis].firstname;
-                                                        varMail = result[Nbprecis].accountMail1;
-                                                        VarAccountNumber = result[Nbprecis].accountNumber;
-                                                        console.log(VarPrenom,VarNom,result[Nbprecis].accountMail1)
-                                                        const docpdf = new jsPDF({format: 'a4'});
-                                                        // Modification du contenu du pdf
-                                                        fs.readFile('image.jpg', function(err, data)
-                                                            {
-                                                                    // Change la taille de la police d'écriture 
-                                                                    docpdf.setFontSize(30); docpdf.setFont("helvetica", "bold");
-                                                                    // Créer une ligne de texte avec les positions dictés en argument 'x' & 'y' à la fin
-                                                                    docpdf.text("  ATTESTATION\nDE  FORMATION", 65, 60);                                                            docpdf.setFontSize(12); docpdf.setFont("helvetica", "normal");
-                                                                    docpdf.text("Je soussigné Jean-Claude Figuo, Directeur Général de l'entreprise Paperbird,", 20, 100);
-                                                                    docpdf.text("Certifie que :", 20, 110); docpdf.setFont("Courier", "bold");                                  docpdf.text(VarNom +' '+ VarPrenom, 80, 110); docpdf.setFont("helvetica", "normal");         
-                                                                    docpdf.text("Numéro de compte :", 20, 120); docpdf.setFont("Courier", "bold");                              docpdf.text(VarAccountNumber, 80, 120); docpdf.setFont("helvetica", "normal");      
-                                                                    docpdf.text("A suivi dans notre site internet la formation :", 20, 140);docpdf.setFont("Courier", "bold");  docpdf.text(VarFormation, 110, 140); docpdf.setFont("helvetica", "normal");
-                                                                    docpdf.text("Depuis le :", 20, 160); docpdf.setFont("Courier", "bold");                                     docpdf.text(VarDBFormation.toISOString().split('T')[0], 80, 160); docpdf.setFont("helvetica", "normal");
-                                                                    docpdf.text("Fin de formation le :", 20, 170); docpdf.setFont("Courier", "bold");                           docpdf.text(VarDFFormation.toISOString().split('T')[0], 80, 170); docpdf.setFont("helvetica", "normal");
-                                                                    docpdf.text("Modalité de la formation :", 20, 180); docpdf.setFont("Courier", "bold");                      docpdf.text(VarModaFormation, 80, 180); docpdf.setFont("helvetica", "normal");
-                                                                    docpdf.text("Numéro de la formation :", 20, 190); docpdf.setFont("Courier", "bold");                        docpdf.text(""+IdDeLaFormation+"", 80, 190); docpdf.setFont("helvetica", "normal");
-                                                                    docpdf.text("Appréciations : ", 20, 210); docpdf.setFont("Courier", "bold");                                docpdf.text("Très bon travail et bon esprit d'équipe.", 80, 210); docpdf.setFont("helvetica", "normal"); docpdf.setFontSize(10);
-                                                                    docpdf.text("Fait à Quai-d'Ivry\nLe : "+new Date().toLocaleDateString("fr-GB",{month: "long",day: "numeric",year: "numeric"}), 20, 240);
-
-                                                                    //Ajout et positionnement d'image dans le pdf 
-                                                                    docpdf.addImage(data, 'jpeg', 0, 0, 210, 30);
-                                                                            // Va sauvegarder le fichier
-                                                                            docpdf.save("Attestation.pdf");        
-                                                            });
-                                                            fs.readFile('image2.jpg', function(err, datda)
-                                                            {
-                                                                    //Ajout et positionnement d'image dans le pdf 
-                                                                    docpdf.addImage(datda, 'jpeg', 0, 270, 210, 30);    
-                                                                            // Va sauvegarder le fichier
-                                                                            docpdf.save("Attestation.pdf");    
-                                                            });;
-
-                                                        // Configuration de paramètres d'envoi du mail
-                                                        var mailOptions = 
-                                                            {
-                                                                from: 'paperbird.formation@gmail.com',
-                                                                to: varMail,
-                                                                subject: 'Retour de votre formation : '+ VarFormation,
-                                                                // Utilise un message préfait
-                                                                text: 'Bonjour \n\n'+ VarNom +'\n'+VarPrenom+'\n\nvotre formation : ' + VarFormation + ' a pris fin.\nVous est donc envoyé une attestation en format pdf prouvant votre présense à celle ci sous joint.\n\n\n\nCordialement\nPaperpirdFormation',
-                                                                attachments: [{filename: 'Attestation.pdf',path: 'Attestation.pdf'}]
-                                                            };
-                                                        transporter.sendMail(mailOptions, function (error, info) // Envoi du mail
-                                                            {
-                                                                if (error) 
-                                                                    {
-                                                                        console.log(error);
-                                                                    }
-                                                                else 
-                                                                    {
-                                                                        console.log('Email sent to : ' + varMail + '\n response' + info.response);                                                        
-                                                                    }                       
-                                                            })
-                                                        console.log("Fin de boucle")
-                                                        Nbprecis++;
-                                                        if (Nbprecis<NbmaxMail)
-                                                            {Boucle();}
-                                                    },500)
-                                            }
-                                        Boucle()
-                                    });                                                                                            
-                    }); });   
-    };
-
-
-//Fonction servant à modifier son PDF sans l'envoyer par mail à qui que ce soit , le PDF sera créée sur la machine à coté du fichier js éxécutant la fonctions
-function TestePDF()
-    {
-        /* Ancien PDF
-        const doc = new jsPDF();
-        // Modification du contenu du pdf
-        doc.text("Attestation de formation\n\nCette attestation stipule que\n"+VarNom+' '+VarPrenom+"\na suivi avec succès la session de formation : "+VarFormation, 10, 10);
-        // Va sauvegarder le fichier
-        doc.save("Attestation.pdf");*/
-        const docpdf = new jsPDF({format: 'a4'});
-        fs.readFile('Loog.png', function(err, data)
-            {
-                // Modification du contenu du pdf
-                    // Change la taille de la police d'écriture 
-                    docpdf.setFontSize(12);
-                    // Créer une ligne de texte avec les positions dictés en argument 'x' & 'y' à la fin
-                    docpdf.text("Je soussigné Jean-Claude figuo, Directeur Général de l'entreprise Paperbird,", 20, 50);
-                    docpdf.text("Certifie que :", 20, 60); docpdf.setFont("Courier", "bold"); docpdf.text("Anne Batelle", 80, 60); docpdf.setFont("helvetica", "normal");         
-                    docpdf.text("Numéro de compte :", 20, 70); docpdf.setFont("Courier", "bold"); docpdf.text("25", 80, 70); docpdf.setFont("helvetica", "normal");      
-                    docpdf.text("A suivi dans notre site internet la formation :", 20, 90); docpdf.setFont("Courier", "bold"); docpdf.text("PaperBird Formation", 110, 90); docpdf.setFont("helvetica", "normal");
-                    docpdf.text("Depuis le :", 20, 110); docpdf.setFont("Courier", "bold"); docpdf.text("2021/12/25", 80, 110); docpdf.setFont("helvetica", "normal");
-                    docpdf.text("Fin de formation le :", 20, 120); docpdf.setFont("Courier", "bold"); docpdf.text("2022/05/16", 80, 120); docpdf.setFont("helvetica", "normal");
-                    docpdf.text("Modalité de la formation :", 20, 130); docpdf.setFont("Courier", "bold"); docpdf.text("Presentiel", 80, 130); docpdf.setFont("helvetica", "normal");
-                    docpdf.text("Appréciations : ", 20, 150); docpdf.setFont("Courier", "bold"); docpdf.text("Très bon travail. Et bon esprit d'équipe.", 80, 150); docpdf.setFont("helvetica", "normal"); docpdf.setFontSize(10);
-                    docpdf.text("Fait à Quai-d'Ivry\nLe : "+new Date().toLocaleDateString("fr-GB",{month: "long",day: "numeric",year: "numeric"}), 20, 180);
-
-                    //Ajout et positionnement d'image dans le pdf 
-                    docpdf.addImage(data, 'jpeg', 10, 5);
-                            // Va sauvegarder le fichier
-                            docpdf.save("TesteAttustation.pdf");
-                            console.log(docpdf.getFontList());
-                            console.log('Fini !');                
-            });
-    }
-
-//Exécute les fonctions ( sauf si mis en commentaire à l'aide du doubleslash "//")
-    //boucle();
-    //Minuterie();
-    //TerminerFormation();
-    //TestePDF()
 
 
 app.post('/make', urlencodedParser, (req,res) => {

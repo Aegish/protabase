@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+﻿<!DOCTYPE html>
+<html lang="fr">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scanner</title>
-        <link rel="stylesheet" href="css/base.css">
- 
+    <link rel="stylesheet" href="css/base.css">
 </head>
 <body class="bgimg2">
     
@@ -13,10 +12,10 @@
     <ul class="first">            
       <li style="float:left"> <a id="nav_home" href="/home">Acceuil</a></li>
       <li><a id="nav_visio" href="/scanner">Scanneur</a></li>
-      <li><a id="nav_factory" href="/factory">Factordy</a></li>
+      <li><a id="nav_factory" href="/factory">Factory</a></li>
       <li><a id="nav_planning" href="/planning">Planning</a></li>
       <li><a id="nav_tutoriels" href="/animation">Tutoriels</a></li>
-      <li><a id="nav_i_docteur" href="/profil-docteur">Mon profil</a></li>
+      <li><a id="nav_i_admin" href="/profil-admin">Mon profil</a></li>
       <li><a id="nav_co" href="/">Se déconnecter</a></li>
     </ul>
   </nav>
@@ -24,17 +23,13 @@
   
      
   <section class="formation-contenu">
-   
-  
-   
     <div class="wrapper">
-    <button onClick="location.href='/admin-gestion'" class="box"> Modifier son profil </button>
-    <button onClick="location.href='/'" class="box"> Mon OF </button>
-    <button onClick="location.href='/admin-planning'" class="box"> Planning des Formations </button>    
+      <form action="/scanner" method="post">
+        <input name="scanURL" placeholder="URL" required="" type="text">
+        <input type="submit"> 
+      </form> 
     </div>
   </section>
   
-</body>
-</html>
 </body>
 </html>
