@@ -455,8 +455,8 @@ app.post('/scanner', urlencodedParser, (req, res) => {
     var scanURL = req.body.scanURL;
     if(scanURL)
         {            
-            var sqlCommand0 = "SELECT * FROM utilisateur WHERE utilisateur.codeBarre = '"+ scanURL +"';";
-            var sqlCommand1 = "SELECT * FROM drug WHERE drug.drugValue = '"+scanURL +"';";
+            var sqlCommand0 = "SELECT nom,prenom,adresse,IdImg FROM utilisateur WHERE utilisateur.codeBarre = '"+ scanURL +"';";
+            var sqlCommand1 = "SELECT drugName,drugValue,drugIdImg,drugDecription,drugPrice,drugStock FROM drug WHERE drug.drugValue = '"+scanURL +"';";
             mysqlConnexion.query(sqlCommand0,(err, results) => {
                 if(err) throw err;
                 if (results.length > 0) 
