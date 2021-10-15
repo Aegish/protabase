@@ -6,7 +6,7 @@
     <title>Scanner</title>
     <link rel="stylesheet" href="css/base.css">
 </head>
-<body class="bgimg2">
+<body class="bgimg2" onclick="window.location.reload()">
     
   <nav>
     <ul class="first">            
@@ -21,8 +21,9 @@
   </nav>
   <br>
   <script>
-    function Vider(){
-    setTimeout(function resetForm(){document.getElementById("formulaireScan").reset();},100);
+    function Vider()
+    {
+      setTimeout(function(){document.getElementById("formulaireScan").reset();},100);
     }
   </script>
      
