@@ -231,7 +231,7 @@ app.get('/profil', (req, res) =>
             infoProfile = retour;
             console.log(infoProfile);
         });
-        res.render('profil')
+        res.render('profil', {infoProfile: infoProfile});
         //infoProfile = aux informations d'utilisateur du compte s'étant connecté
     })
 // --> Naviguer entre page EJS <-- //
@@ -256,7 +256,7 @@ app.get('/profil-admin', (req, res) => {
         console.log(infoProfile);
     });
     res.render('profil-admin')
-    
+
 })
 
 //-> page de redirection vers le planning
