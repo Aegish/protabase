@@ -39,16 +39,19 @@
                 <button type="submit" value="post">Enregistrer</button>
               </form>
               </div>
-              <div id="infoPerso">
-                <table>
-                  <tr>
-                    <td>Nom : <%= infoProfile[0].nom %></td>
-                    <td>prenom : <%= infoProfile[0].prenom %></td>
-                    <td>email : <%= infoProfile[0].email %></td>
-                  </tr>
+              <div class="infoPerso">
+                Nom : <%= infoProfile[0].nom %><br />
+                prenom : <%= infoProfile[0].prenom %><br />
+                email : <%= infoProfile[0].email %> <br />
+                Votre image : <img src=<%= infoProfile[0].idImg %> /><br>
                 </table>
               </div>
-   </body>
+  </body>
+  <script>
+    if(typeof infoProfile[0] === 'undefined'){
+      window.location.reload();
+    }
+  </script>
 </html>
 
        

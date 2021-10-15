@@ -43,7 +43,7 @@ var transporter = nodemailer.createTransport({
 });
 
 var mysqlConnexion = mysql.createConnection({
-    host: 'localhost',
+    host: '172.20.21.4',
     user: 'docteur',
     password: 'peste',
     database: 'protabase'
@@ -177,7 +177,13 @@ app.get('/inscription_succes', (req, res) => {
 
 //-> page de redirection après connexion quand c'est un client
 app.get('/connecter', function (request, response) {
-    if (request.session.loggedin) {
+    if (request.session.loggedin) {        
+        mysqlConnexion.query("SELECT * FROM utilisateur WHERE idCompte = '"+variablelocal+"';", (err, retour)=> 
+        {
+            if(err) throw err;
+            infoProfile = retour;
+            console.log(infoProfile);
+        });
         response.render('connecter');
 
     } else {
@@ -188,7 +194,13 @@ app.get('/connecter', function (request, response) {
 
 //-> page de redirection après connexion quand c'est un Docteur.
 app.get('/connecter-docteur', function (request, response) {
-    if (request.session.loggedin) {
+    if (request.session.loggedin) {        
+        mysqlConnexion.query("SELECT * FROM utilisateur WHERE idCompte = '"+variablelocal+"';", (err, retour)=> 
+        {
+            if(err) throw err;
+            infoProfile = retour;
+            console.log(infoProfile);
+        });
         if (mysqlConnexion.query("SELECT * FROM compte WHERE compte.compteType = 'Docteur'")){
             response.render('connecter-docteur');
         }
@@ -200,7 +212,13 @@ app.get('/connecter-docteur', function (request, response) {
 
 //-> page de redirection après connexion quand c'est un Administrateur
 app.get('/connecter-admin', function (request, response) {
-    if (request.session.loggedin) {
+    if (request.session.loggedin) {        
+        mysqlConnexion.query("SELECT * FROM utilisateur WHERE idCompte = '"+variablelocal+"';", (err, retour)=> 
+        {
+            if(err) throw err;
+            infoProfile = retour;
+            console.log(infoProfile);
+        });
         if (mysqlConnexion.query("SELECT * FROM compte WHERE compte.compteType = 'Admin'")) {
 
             response.render('connecter-admin');
@@ -225,12 +243,6 @@ app.get('/connecter-admin', (req, res) => {
 // -> page profil, ici se trouve les infos perso'
 app.get('/profil', (req, res) => 
     {
-        mysqlConnexion.query("SELECT * FROM utilisateur WHERE idCompte = '"+variablelocal+"';", (err, retour)=> 
-        {
-            if(err) throw err;
-            infoProfile = retour;
-            console.log(infoProfile);
-        });
         res.render('profil', {infoProfile: infoProfile});
         //infoProfile = aux informations d'utilisateur du compte s'étant connecté
     })
@@ -238,23 +250,11 @@ app.get('/profil', (req, res) =>
 
     
 app.get('/profil-docteur', (req, res) => {
-    mysqlConnexion.query("SELECT * FROM utilisateur WHERE idCompte = '"+variablelocal+"';", (err, retour)=> 
-    {
-        if(err) throw err;
-        infoProfile = retour;
-        console.log(infoProfile);
-    });
     res.render('profil-docteur')    
 
 })
 
 app.get('/profil-admin', (req, res) => {
-    mysqlConnexion.query("SELECT * FROM utilisateur WHERE idCompte = '"+variablelocal+"';", (err, retour)=> 
-    {
-        if(err) throw err;
-        infoProfile = retour;
-        console.log(infoProfile);
-    });
     res.render('profil-admin')
 
 })
