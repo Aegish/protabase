@@ -502,7 +502,6 @@ app.post('/scanner', urlencodedParser, (req, res) => {
                     }
             });
             console.log("Recherche code barre tenté");
-            return results;
         }
 })
 
