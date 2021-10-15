@@ -28,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));*/
 // Connexion MYSQL
 
 variablelocal = 12 ;
+infoProfile = "Info par encore";
 
 const DateRef = new Date(Date.now() - 86400000);
 
@@ -103,7 +104,7 @@ app.post('/log_in', urlencodedParser, (req, res) => {
     var Identifiant = req.body.Identifiant;
     var password = req.body.Psw;
 
-    if (Identifiant && password) {
+    if (Identifiant && password) {//infoProfile = nom de var pour Julien (info utilisateur)
 
             //   SELECT idCompte FROM compte WHERE (pseudo = ? OR pseudo = ?) AND mdp=? AND compteType='?';
 
@@ -222,18 +223,40 @@ app.get('/connecter-admin', (req, res) => {
 })
 
 // -> page profil, ici se trouve les infos perso'
-app.get('/profil', (req, res) => {
-    res.render('profil')
-})
+app.get('/profil', (req, res) => 
+    {
+        mysqlConnexion.query("SELECT * FROM utilisateur WHERE idCompte = '"+variablelocal+"';", (err, retour)=> 
+        {
+            if(err) throw err;
+            infoProfile = retour;
+            console.log(infoProfile);
+        });
+        res.render('profil')
+        //infoProfile = aux informations d'utilisateur du compte s'étant connecté
+    })
 // --> Naviguer entre page EJS <-- //
 
     
 app.get('/profil-docteur', (req, res) => {
-    res.render('profil-docteur')
+    mysqlConnexion.query("SELECT * FROM utilisateur WHERE idCompte = '"+variablelocal+"';", (err, retour)=> 
+    {
+        if(err) throw err;
+        infoProfile = retour;
+        console.log(infoProfile);
+    });
+    res.render('profil-docteur')    
+
 })
 
 app.get('/profil-admin', (req, res) => {
+    mysqlConnexion.query("SELECT * FROM utilisateur WHERE idCompte = '"+variablelocal+"';", (err, retour)=> 
+    {
+        if(err) throw err;
+        infoProfile = retour;
+        console.log(infoProfile);
+    });
     res.render('profil-admin')
+    
 })
 
 //-> page de redirection vers le planning
@@ -455,8 +478,8 @@ app.post('/scanner', urlencodedParser, (req, res) => {
     var scanURL = req.body.scanURL;
     if(scanURL)
         {            
-            var sqlCommand0 = "SELECT nom,prenom,adresse,IdImg FROM utilisateur WHERE utilisateur.codeBarre = '"+ scanURL +"';";
-            var sqlCommand1 = "SELECT drugName,drugValue,drugIdImg,drugDecription,drugPrice,drugStock FROM drug WHERE drug.drugValue = '"+scanURL +"';";
+            var sqlCommand0 = "SELECT * FROM utilisateur WHERE utilisateur.codeBarre = '"+ scanURL +"';";
+            var sqlCommand1 = "SELECT * FROM drug WHERE drug.drugValue = '"+scanURL +"';";
             mysqlConnexion.query(sqlCommand0,(err, results) => {
                 if(err) throw err;
                 if (results.length > 0) 
@@ -479,6 +502,7 @@ app.post('/scanner', urlencodedParser, (req, res) => {
                     }
             });
             console.log("Recherche code barre tenté");
+            return results;
         }
 })
 
